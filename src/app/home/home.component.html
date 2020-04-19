@@ -1,0 +1,84 @@
+<div class="container">
+    <br />
+    <mat-radio-group [(ngModel)]="selection" #radioGroup="matRadioGroup">
+        <mat-radio-button value="Weblogic Parameters" (click)="change('Weblogic Parameters')">Weblogic Parameters</mat-radio-button>
+        <mat-radio-button value="Non Weblogic Parameters" (click)="change('Non Weblogic Parameters')">Non Weblogic Parameters</mat-radio-button>
+    </mat-radio-group>
+    <br />
+    <br />
+    <div *ngIf="weblogicFlag">
+        <form [formGroup]="weblogicForm" *ngIf="weblogicForm">
+            <table formArrayName="weblogicParamDetails">
+                <tr>
+                    <th>S.No</th>
+                    <th>Installation Path</th>
+                    <th>Tier Name</th>
+                    <th>Host</th>
+                    <th>JVM Instance Name</th>
+                    <th>Application Name</th>
+        
+                </tr>
+                    <tr *ngFor="let item of weblogicForm.get('weblogicParamDetails')['controls']; let i=index"
+                        [formGroupName]="i" >
+                        <td>{{i+1}}.</td>
+                        <td><input type='text' formControlName="installationPath"></td>
+                        <td><input type='text' formControlName="tierName"></td>
+                        <td><input type='text' formControlName="host"></td>
+                        <td><input type='text' formControlName="jvmInstanceName"></td>
+                        <td><input type='text' formControlName="applicationName"></td>
+                        <td><button (click)="delete(i)">Delete</button></td>
+                    </tr>
+        
+            </table>
+        </form>
+    </div>
+
+    <div *ngIf="!weblogicFlag">
+        <form [formGroup]="nonWeblogicForm" *ngIf="nonWeblogicForm">
+            <table formArrayName="nonWeblogicParamDetails">
+                <tr>
+                    <th>S.No</th>
+                    <th>Installation Path</th>
+                    <th>Tier Name</th>
+                    <th>Host</th>
+                    <th>Application Name</th>
+        
+                </tr>
+                    <tr *ngFor="let item of nonWeblogicForm.get('nonWeblogicParamDetails')['controls']; let i=index"
+                        [formGroupName]="i" >
+                        <td>{{i+1}}.</td>
+                        <td><input type='text' formControlName="installationPath"></td>
+                        <td><input type='text' formControlName="tierName"></td>
+                        <td><input type='text' formControlName="host"></td>
+                        <td><input type='text' formControlName="applicationName"></td>
+                        <td><button (click)="delete(i)">Delete</button></td>
+                    </tr>
+        
+            </table>
+        </form>
+    </div>
+    
+    <br />
+    <button (click)="addRow()">Add Row</button>
+    <button (click)="submit()" [disabled]="!weblogicForm.valid && !nonWeblogicForm.valid ">Fetch Parameters</button>
+    <br />
+    <br />
+    <br />
+    <div *ngIf="submitFlag && weblogicFlag">
+        <b>Copy the following Weblogic Parameters::</b>
+        <br />
+        <div *ngFor="let param of weblogicForm.value['weblogicParamDetails']">
+            <p>-javaagent:{{param["installationPath"]}}/APMPROD/AppServerAgent/javaagent.jar -Dappdynamics.agent.nodeName={{param["tierName"]}}_{{param["host"]}}_{{param["jvmInstanceName"]}} -Dappdynamics.agent.applicationName={{param["applicationName"]}} -Dappdynamics.agent.tierName={{param["tierName"]}} -Dappdynamics.agent.log4j2.disabled=true </p>
+        </div>
+    </div>
+    <div *ngIf="submitFlag && !weblogicFlag">
+        <b>Copy the following Non Weblogic Parameters::</b>
+        <br />
+        <div *ngFor="let param of nonWeblogicForm.value['nonWeblogicParamDetails']">
+            <p>-javaagent:{{param["installationPath"]}}/APMPROD/AppServerAgent/javaagent.jar -Dappdynamics.agent.nodeName={{param["applicationName"]}}_{{param["tierName"]}}_{{param["host"]}} -Dappdynamics.agent.applicationName={{param["applicationName"]}} -Dappdynamics.agent.tierName={{param["tierName"]}} -Dappdynamics.agent.log4j2.disabled=true </p>
+        </div>
+    </div>
+</div>
+
+
+

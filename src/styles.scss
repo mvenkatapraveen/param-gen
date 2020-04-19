@@ -1,0 +1,15 @@
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~@angular/material/theming';
+@include mat-core();
+
+$mvp-app-primary: mat-palette($mat-indigo);
+$mvp-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+$mvp-app-theme:   mat-light-theme($mvp-app-primary, $mvp-app-accent);
+
+@include mat-core-theme($mvp-app-theme);
+@include mat-button-theme($mvp-app-theme);
+@include mat-checkbox-theme($mvp-app-theme);
+
+html, body {
+    margin: 0;
+}
